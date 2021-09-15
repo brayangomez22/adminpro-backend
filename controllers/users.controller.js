@@ -44,7 +44,53 @@ const createUser = async (req = request, res = response) => {
 	}
 };
 
+const editUser = async (req = request, res = response) => {
+	const uid = req.params.id;
+
+	try {
+		const userDB = await User.findById(uid);
+
+		if (!userDB) {
+			res.status(404).json({
+				ok: false,
+				msg: 'The user does not exist in the database',
+			});
+		}
+
+		const fields = req.body;
+
+		if (userDB.email === req.body.email) {
+			delete fields.email;
+		} else {
+			const emailExists = await User.findOne({ email: req.body.email });
+
+			if (emailExists) {
+				return res.status(400).json({
+					ok: false,
+					msg: 'There is already a user with this email',
+				});
+			}
+		}
+
+		delete fields.password;
+		delete fields.google;
+
+		const updatedUser = await User.findByIdAndUpdate(uid, fields, { new: true });
+
+		res.json({
+			ok: true,
+			user: updatedUser,
+		});
+	} catch (error) {
+		res.status(500).json({
+			ok: false,
+			msg: 'Unexpected error...',
+		});
+	}
+};
+
 module.exports = {
 	getUsers,
 	createUser,
+	editUser,
 };
