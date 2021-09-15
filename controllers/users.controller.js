@@ -85,8 +85,36 @@ const editUser = async (req = request, res = response) => {
 	}
 };
 
+const deleteUser = async (req = request, res = response) => {
+	const uid = req.params.id;
+
+	try {
+		const userDB = await User.findById(uid);
+
+		if (!userDB) {
+			res.status(404).json({
+				ok: false,
+				msg: 'The user does not exist in the database',
+			});
+		}
+
+		await User.findByIdAndDelete(uid);
+
+		res.json({
+			ok: true,
+			msg: 'User Deleted',
+		});
+	} catch (error) {
+		res.status(500).json({
+			ok: false,
+			msg: 'Unexpected error...',
+		});
+	}
+};
+
 module.exports = {
 	getUsers,
 	createUser,
 	editUser,
+	deleteUser,
 };
