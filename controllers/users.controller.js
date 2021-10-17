@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user.model');
 const { generateJWT } = require('../helpers/jwt');
 
-const getUsers = async (req, res) => {
+const getUsers = async (req = request, res = response) => {
 	const users = await User.find();
 
 	res.json({
