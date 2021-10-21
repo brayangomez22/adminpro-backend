@@ -1,5 +1,9 @@
 const { request, response } = require('express');
+const path = require('path');
+const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
+
+const { updateImage } = require('../helpers/updateImage');
 
 const fileUpload = async (req = request, res = response) => {
 	const type = req.params.type;
@@ -47,6 +51,8 @@ const fileUpload = async (req = request, res = response) => {
 			});
 		}
 
+		updateImage(type, id, nameFile);
+
 		res.json({
 			ok: true,
 			msg: 'File uploaded!',
@@ -55,6 +61,21 @@ const fileUpload = async (req = request, res = response) => {
 	});
 };
 
+const getImage = async (req = request, res = response) => {
+	const type = req.params.type;
+	const photo = req.params.photo;
+
+	const pathImg = path.join(__dirname, `../uploads/${type}/${photo}`);
+
+	if (fs.existsSync(pathImg)) {
+		res.sendFile(pathImg);
+	} else {
+		const pathImg = path.join(__dirname, `../uploads/no-img.jpg`);
+		res.sendFile(pathImg);
+	}
+};
+
 module.exports = {
 	fileUpload,
+	getImage,
 };
