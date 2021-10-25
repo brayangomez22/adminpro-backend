@@ -16,6 +16,9 @@ app.use(express.json());
 // BD
 dbConnection();
 
+// PUBLIC DIRECTORY
+app.use(express.static('public'));
+
 // ROUTES
 app.use('/api/users', require('./routes/users.routes'));
 app.use('/api/hospitals', require('./routes/hospitals.routes'));
