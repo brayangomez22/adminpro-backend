@@ -58,7 +58,7 @@ const editUser = async (req = request, res = response) => {
 		const userDB = await User.findById(uid);
 
 		if (!userDB) {
-			res.status(404).json({
+			return res.status(404).json({
 				ok: false,
 				msg: 'The user does not exist in the database',
 			});
@@ -99,7 +99,7 @@ const deleteUser = async (req = request, res = response) => {
 		const userDB = await User.findById(uid);
 
 		if (!userDB) {
-			res.status(404).json({
+			return res.status(404).json({
 				ok: false,
 				msg: 'The user does not exist in the database',
 			});
