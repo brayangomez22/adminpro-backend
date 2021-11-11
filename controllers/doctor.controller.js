@@ -10,6 +10,23 @@ const getDoctors = async (req = request, res = response) => {
 	});
 };
 
+const getDoctorsById = async (req = request, res = response) => {
+	try {
+		const id = req.params.id;
+		const doctor = await Doctor.findById(id).populate('user', 'name img').populate('hospital', 'name img');
+
+		res.json({
+			ok: true,
+			doctor,
+		});
+	} catch (error) {
+		res.status(500).json({
+			ok: false,
+			msg: 'Unexpected error...',
+		});
+	}
+};
+
 const createDoctor = async (req = request, res = response) => {
 	try {
 		const uid = req.uid;
@@ -88,6 +105,7 @@ const deleteDoctor = async (req = request, res = response) => {
 
 module.exports = {
 	getDoctors,
+	getDoctorsById,
 	createDoctor,
 	editDoctor,
 	deleteDoctor,
